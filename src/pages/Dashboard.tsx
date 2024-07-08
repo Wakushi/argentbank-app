@@ -1,19 +1,25 @@
 import { useDispatch, useSelector } from "react-redux"
-import { getUserInfo } from "../features/profile/profileSlice"
-import { useEffect } from "react"
-import { getProfileFetchStatus, getUser } from "../selectors"
+import { FormEvent, useEffect, useState } from "react"
+import { getProfileFetchStatus, getUserInfo } from "../selectors"
 import { User } from "../lib/types"
 import AccountCard, { AccountSection } from "../components/AccountCard"
 import { useNavigate } from "react-router-dom"
+import { getUser, updateUser } from "../features/user/userSlice"
+import { AppDispatch } from "../store"
 
 export default function DashboardPage() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
-  const user = useSelector(getUser)
+  const user = useSelector(getUserInfo)
   const status = useSelector(getProfileFetchStatus)
 
   useEffect(() => {
-    dispatch(getUserInfo())
+    try {
+      dispatch(getUser())
+    } catch (error: any) {
+      alert(error.message)
+      console.error(error)
+    }
   }, [])
 
   if (status === "loading") {
@@ -30,7 +36,11 @@ export default function DashboardPage() {
   }
 
   if (!user) {
-    return <div>Something went wrong..</div>
+    return (
+      <main className="main bg-dark">
+        <div>Something went wrong..</div>
+      </main>
+    )
   }
 
   return (
@@ -57,15 +67,62 @@ export default function DashboardPage() {
 }
 
 function DashboardHead({ user }: { user: User }) {
+  const dispatch = useDispatch<AppDispatch>()
   const { firstName, lastName } = user
+
+  const [editMode, setEditMode] = useState<boolean>(false)
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault()
+    const formData = new FormData(e.target as HTMLFormElement)
+    const { firstName, lastName } = Object.fromEntries(formData.entries())
+    try {
+      await dispatch(
+        updateUser({
+          firstName: firstName.toString(),
+          lastName: lastName.toString(),
+        })
+      ).unwrap()
+    } catch (error: any) {
+      alert(error.message)
+      console.error(error)
+    } finally {
+      setEditMode(false)
+    }
+  }
+
   return (
     <div className="header">
-      <h1>
-        Welcome back
-        <br />
-        {firstName} {lastName}!
-      </h1>
-      <button className="edit-button">Edit Name</button>
+      <h1>Welcome back</h1>
+      {editMode ? (
+        <div>
+          <form className="update-form" onSubmit={onSubmit}>
+            <div className="update-form-inputs">
+              <input type="text" placeholder={firstName} name="firstName" />
+              <input type="text" placeholder={lastName} name="lastName" />
+            </div>
+            <div className="update-form-actions">
+              <button type="submit">Save</button>
+              <button type="button" onClick={() => setEditMode(false)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        <>
+          <h1 className="userName">
+            {" "}
+            {firstName} {lastName}!
+          </h1>
+          <button
+            className="edit-button"
+            onClick={() => setEditMode((prevEditMode) => !prevEditMode)}
+          >
+            Edit Name
+          </button>
+        </>
+      )}
     </div>
   )
 }

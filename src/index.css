@@ -41,6 +41,10 @@ body {
   white-space: nowrap !important; /* 3 */
 }
 
+.header > .userName {
+  margin-top: 0;
+}
+
 .main-nav {
   display: flex;
   justify-content: space-between;
@@ -60,6 +64,12 @@ body {
 .main-nav-item {
   text-decoration: none;
   margin-right: 0.5rem;
+  border: transparent;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  color: #2c3e50;
 }
 
 .main-nav-item i {
@@ -68,15 +78,6 @@ body {
 
 .main-nav-item:hover {
   text-decoration: underline;
-}
-
-.main-nav-item.sign-out {
-  border: transparent;
-  background: transparent;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: bold;
-  color: #2c3e50;
 }
 
 .main-nav-logo {
@@ -307,4 +308,35 @@ body {
   .transaction-button {
     width: 200px;
   }
+}
+
+.update-form,
+.update-form-inputs,
+.update-form-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.update-form {
+  flex-direction: column;
+}
+
+.update-form-inputs input {
+  padding: 1rem;
+  border: 1px solid grey;
+  border-radius: 0.2rem;
+  color: grey;
+  font-weight: 500;
+}
+
+.update-form-actions button {
+  width: 120px;
+  border: 1px solid #00bc77;
+  background: #fff;
+  padding: 0.4rem 2rem;
+  color: #00bc77;
+  font-weight: 600;
+  border-radius: 0.2rem;
 }

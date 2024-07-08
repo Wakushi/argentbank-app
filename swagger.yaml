@@ -1,0 +1,172 @@
+swagger: "2.0"
+info:
+  title: Bank Argent API documentation
+  description: Contains all available API endpoints in this codebase
+  version: "1.0.0"
+  termsOfService: "http://swagger.io/terms/"
+host: localhost:3001
+basePath: /api/v1
+schemes:
+  - http
+paths:
+  /transactions:
+    get:
+      tags:
+        - Transaction Module
+      summary: Get all transactions for the current month grouped by account
+      description: API to retrieve all transactions for the current month, grouped by account
+      parameters:x
+        - in: query
+          name: month
+          type: string
+          description: Month for which to retrieve transactions
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transactions retrieved successfully
+          schema:
+            $ref: "#/definitions/TransactionsResponse"
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+    post:
+      tags:
+        - Transaction Module
+      summary: Add a new transaction
+      description: API to add a new transaction
+      parameters:
+        - in: body
+          name: body
+          description: Transaction data to be added
+          required: true
+          schema:
+            $ref: "#/definitions/Transaction"
+      produces:
+        - application/json
+      responses:
+        "201":
+          description: Transaction created successfully
+          schema:
+            $ref: "#/definitions/Transaction"
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - Transaction Module
+      summary: Get transaction details
+      description: API to retrieve details of a specific transaction
+      parameters:
+        - in: path
+          name: transactionId
+          type: string
+          description: ID of the transaction to retrieve
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction details retrieved successfully
+          schema:
+            $ref: "#/definitions/Transaction"
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+
+    put:
+      tags:
+        - Transaction Module
+      summary: Update a transaction
+      description: API to update information of a specific transaction
+      parameters:
+        - in: path
+          name: transactionId
+          type: string
+          description: ID of the transaction to update
+          required: true
+        - in: body
+          name: body
+          description: Transaction data to be updated
+          required: true
+          schema:
+            $ref: "#/definitions/Transaction"
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction updated successfully
+          schema:
+            $ref: "#/definitions/Transaction"
+        "404":
+          description: Transaction not found
+        "400":
+          description: Invalid Fields
+        "500":
+          description: Internal Server Error
+
+    delete:
+      tags:
+        - Transaction Module
+      summary: Delete a transaction
+      description: API to delete a specific transaction
+      parameters:
+        - in: path
+          name: transactionId
+          type: string
+          description: ID of the transaction to delete
+          required: true
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: Transaction deleted successfully
+        "404":
+          description: Transaction not found
+        "500":
+          description: Internal Server Error
+
+definitions:
+  Transaction:
+    type: object
+    properties:
+      id:
+        type: string
+        description: Transaction ID
+      accountId:
+        type: string
+        description: Account ID associated with the transaction
+      amount:
+        type: number
+        description: Amount of the transaction
+      date:
+        type: string
+        format: date
+        description: Date of the transaction
+      description:
+        type: string
+        description: Description of the transaction
+
+  TransactionsResponse:
+    type: object
+    properties:
+      transactions:
+        type: array
+        items:
+          $ref: "#/definitions/Transaction"
+
+  ApiResponse:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: object

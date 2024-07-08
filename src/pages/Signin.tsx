@@ -1,10 +1,11 @@
 import { useDispatch } from "react-redux"
-import { login } from "../features/auth/authSlice"
+import { login } from "../features/user/userSlice"
 import { FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
+import { AppDispatch } from "../store"
 
 export default function SigninPage() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
   async function onSubmit(e: FormEvent) {
@@ -14,8 +15,8 @@ export default function SigninPage() {
     try {
       await dispatch(
         login({
-          email: username,
-          password: password,
+          email: username.toString(),
+          password: password.toString(),
         })
       ).unwrap()
       navigate("/profile")

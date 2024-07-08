@@ -1,16 +1,21 @@
 import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../../features/auth/authSlice"
+import { logout } from "../../features/user/userSlice"
 import { useNavigate } from "react-router-dom"
 import { isLogged } from "../../selectors"
+import { AppDispatch } from "../../store"
 
 export default function Header() {
   const logged = useSelector(isLogged)
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
   function handleSignOut() {
     dispatch(logout())
     navigate("/")
+  }
+
+  function handleSignIn() {
+    navigate("/login")
   }
 
   return (
@@ -26,14 +31,13 @@ export default function Header() {
         </a>
         <div>
           {logged ? (
-            <button className="main-nav-item sign-out" onClick={handleSignOut}>
+            <button className="main-nav-item" onClick={handleSignOut}>
               <i className="fa fa-user-circle"></i>Sign Out
             </button>
           ) : (
-            <a className="main-nav-item" href="/signin">
-              <i className="fa fa-user-circle"></i>
-              Sign In
-            </a>
+            <button className="main-nav-item" onClick={handleSignIn}>
+              <i className="fa fa-user-circle"></i>Sign In
+            </button>
           )}
         </div>
       </nav>

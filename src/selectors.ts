@@ -1,14 +1,13 @@
-import { AuthState } from "./features/auth/authSlice"
-import { ProfileState } from "./features/profile/profileSlice"
+import { UserState } from "./features/user/userSlice"
 import { User } from "./lib/types"
 import { RootState } from "./store"
 
 export const isLogged = (state: RootState): boolean =>
-  (state.auth as AuthState).logged
+  (state.user as UserState).logged
 
-export const getUser = (state: RootState): User | null =>
-  (state.profile as ProfileState).user
+export const getUserInfo = (state: RootState): User | null =>
+  (state.user as UserState).user
 
 export const getProfileFetchStatus = (
   state: RootState
-): "loading" | "succeeded" | "failed" => (state.profile as ProfileState).status
+): "loading" | "succeeded" | "failed" => (state.user as UserState).status

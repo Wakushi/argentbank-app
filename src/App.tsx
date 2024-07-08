@@ -10,7 +10,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/signin" element={<SigninPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/profile" element={<DashboardPage />} />
         <Route path="*" element={<div>Not found</div>} />
       </Routes>
     </Layout>

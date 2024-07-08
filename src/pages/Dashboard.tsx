@@ -1,13 +1,41 @@
-enum AccountSection {
-  ACCOUNT_CHECKING = "Checking",
-  ACCOUNT_SAVINGS = "Savings",
-  ACCOUNT_CREDIT_CARD = "Credit Card",
-}
+import { useDispatch, useSelector } from "react-redux"
+import { getUserInfo } from "../features/profile/profileSlice"
+import { useEffect } from "react"
+import { getProfileFetchStatus, getUser } from "../selectors"
+import { User } from "../lib/types"
+import AccountCard, { AccountSection } from "../components/AccountCard"
+import { useNavigate } from "react-router-dom"
 
 export default function DashboardPage() {
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const user = useSelector(getUser)
+  const status = useSelector(getProfileFetchStatus)
+
+  useEffect(() => {
+    dispatch(getUserInfo())
+  }, [])
+
+  if (status === "loading") {
+    return (
+      <main className="main bg-dark">
+        <div>Loading...</div>
+      </main>
+    )
+  }
+
+  if (status === "failed") {
+    navigate("/")
+    return
+  }
+
+  if (!user) {
+    return <div>Something went wrong..</div>
+  }
+
   return (
     <main className="main bg-dark">
-      <DashboardHead />
+      <DashboardHead user={user} />
       <h2 className="sr-only">Accounts</h2>
       <AccountCard
         section={AccountSection.ACCOUNT_CHECKING}
@@ -28,40 +56,16 @@ export default function DashboardPage() {
   )
 }
 
-function DashboardHead() {
+function DashboardHead({ user }: { user: User }) {
+  const { firstName, lastName } = user
   return (
     <div className="header">
       <h1>
         Welcome back
         <br />
-        Tony Jarvis!
+        {firstName} {lastName}!
       </h1>
       <button className="edit-button">Edit Name</button>
     </div>
-  )
-}
-
-function AccountCard({
-  section,
-  sectionCount,
-  amount,
-}: {
-  section: AccountSection
-  sectionCount: number
-  amount: number
-}) {
-  return (
-    <section className="account">
-      <div className="account-content-wrapper">
-        <h3 className="account-title">
-          Argent Bank {section} (x{sectionCount})
-        </h3>
-        <p className="account-amount">${amount}</p>
-        <p className="account-amount-description">Available Balance</p>
-      </div>
-      <div className="account-content-wrapper cta">
-        <button className="transaction-button">View transactions</button>
-      </div>
-    </section>
   )
 }

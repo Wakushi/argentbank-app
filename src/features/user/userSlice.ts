@@ -1,59 +1,31 @@
 import {
   AsyncThunk,
-  Dispatch,
   createAsyncThunk,
   createSlice,
+  Dispatch,
 } from "@reduxjs/toolkit"
 import { BASE_API_URL } from "../../lib/constants"
 import { User } from "../../lib/types"
+
+export type UserState = {
+  user: User | null
+  status: "idle" | "loading" | "succeeded" | "failed"
+}
 
 type AsyncThunkConfig = {
   state?: UserState
   dispatch?: Dispatch
 }
 
-export type UserState = {
-  user: User | null
-  logged: boolean
-  status: "loading" | "succeeded" | "failed"
-}
-
 const userState: UserState = {
   user: null,
-  logged: false,
-  status: "loading",
+  status: "idle",
 }
-
-export const login: AsyncThunk<
-  any,
-  {
-    email: string
-    password: string
-  },
-  AsyncThunkConfig
-> = createAsyncThunk(
-  "auth/login",
-  async (credentials: { email: string; password: string }) => {
-    const response = await fetch(`${BASE_API_URL}/user/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    })
-
-    if (!response.ok) {
-      throw new Error("Login failed")
-    }
-
-    const data = await response.json()
-    return data
-  }
-)
 
 export const getUser: AsyncThunk<any, void, AsyncThunkConfig> =
   createAsyncThunk("profile/getUser", async () => {
     const token = localStorage.getItem("access_token")
+
     const response = await fetch(`${BASE_API_URL}/user/profile`, {
       method: "POST",
       headers: {
@@ -67,6 +39,7 @@ export const getUser: AsyncThunk<any, void, AsyncThunkConfig> =
     }
 
     const data = await response.json()
+
     return data
   })
 
@@ -97,36 +70,16 @@ export const updateUser: AsyncThunk<
 })
 
 const userSlice = createSlice({
-  name: "auth",
+  name: "user",
   initialState: userState,
-  reducers: {
-    logout: (state) => {
-      state.logged = false
-      localStorage.removeItem("access_token")
-    },
-  },
+  reducers: {},
   extraReducers(builder) {
-    builder.addCase(login.pending, (state) => {
-      state.status = "loading"
-    })
-    builder.addCase(login.fulfilled, (state, action) => {
-      state.status = "succeeded"
-      const token = action.payload.body.token
-      localStorage.setItem("access_token", token)
-      state.logged = true
-    })
-    builder.addCase(login.rejected, (state) => {
-      state.status = "failed"
-    })
     builder.addCase(getUser.pending, (state) => {
       state.status = "loading"
     })
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.status = "succeeded"
       state.user = action.payload.body
-      if (!state.logged) {
-        state.logged = true
-      }
     })
     builder.addCase(getUser.rejected, (state) => {
       state.status = "failed"
@@ -144,5 +97,4 @@ const userSlice = createSlice({
   },
 })
 
-export const { logout } = userSlice.actions
 export default userSlice.reducer

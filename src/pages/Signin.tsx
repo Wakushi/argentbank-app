@@ -1,8 +1,8 @@
 import { useDispatch } from "react-redux"
-import { login } from "../features/user/userSlice"
 import { FormEvent } from "react"
 import { useNavigate } from "react-router-dom"
 import { AppDispatch } from "../store"
+import { login } from "../features/user/authSlice"
 
 export default function SigninPage() {
   const dispatch = useDispatch<AppDispatch>()
@@ -10,8 +10,11 @@ export default function SigninPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
+
     const formData = new FormData(e.target as HTMLFormElement)
+
     const { username, password } = Object.fromEntries(formData.entries())
+
     try {
       await dispatch(
         login({
@@ -19,6 +22,7 @@ export default function SigninPage() {
           password: password.toString(),
         })
       ).unwrap()
+
       navigate("/profile")
     } catch (error: any) {
       alert(error.message)
@@ -34,11 +38,21 @@ export default function SigninPage() {
         <form onSubmit={onSubmit}>
           <div className="input-wrapper">
             <label htmlFor="username">Username</label>
-            <input type="text" name="username" id="username" />
+            <input
+              type="text"
+              name="username"
+              id="username"
+              autoComplete="username"
+            />
           </div>
           <div className="input-wrapper">
             <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="password" />
+            <input
+              type="password"
+              name="password"
+              id="password"
+              autoComplete="current-password"
+            />
           </div>
           <div className="input-remember">
             <input type="checkbox" id="remember-me" />

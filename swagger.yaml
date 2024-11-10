@@ -114,14 +114,13 @@ paths:
     get:
       tags:
         - Transaction Module
-      summary: Get all transactions for the current month grouped by account
-      description: API to retrieve all transactions for the current month, grouped by account
+      summary: Get all transactions for the specified month (or current if not specified) grouped by account
+      description: API to retrieve all transactions for the specified month (or current if not specified), grouped by account
       parameters:
         - in: query
           name: month
           type: string
           description: Month for which to retrieve transactions
-          required: true
       produces:
         - application/json
       responses:
@@ -133,29 +132,7 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-    post:
-      tags:
-        - Transaction Module
-      summary: Add a new transaction
-      description: API to add a new transaction
-      parameters:
-        - in: body
-          name: body
-          description: Transaction data to be added
-          required: true
-          schema:
-            $ref: "#/definitions/TransactionPayload"
-      produces:
-        - application/json
-      responses:
-        "201":
-          description: Transaction created successfully
-          schema:
-            $ref: "#/definitions/Transaction"
-        "400":
-          description: Invalid Fields
-        "500":
-          description: Internal Server Error
+    
   /transactions/{transactionId}:
     get:
       tags:

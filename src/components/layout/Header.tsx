@@ -1,11 +1,9 @@
-import { useDispatch, useSelector } from "react-redux"
-import { logout } from "../../features/user/userSlice"
+import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router-dom"
-import { isLogged } from "../../selectors"
 import { AppDispatch } from "../../store"
+import { isLogged, logout } from "../../features/user/authSlice"
 
 export default function Header() {
-  const logged = useSelector(isLogged)
   const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
 
@@ -30,7 +28,7 @@ export default function Header() {
           <h1 className="sr-only">Argent Bank</h1>
         </a>
         <div>
-          {logged ? (
+          {isLogged() ? (
             <button className="main-nav-item" onClick={handleSignOut}>
               <i className="fa fa-user-circle"></i>Sign Out
             </button>

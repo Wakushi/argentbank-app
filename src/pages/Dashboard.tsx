@@ -1,26 +1,16 @@
 import { useDispatch, useSelector } from "react-redux"
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useState } from "react"
 import { getProfileFetchStatus, getUserInfo } from "../selectors"
 import { User } from "../lib/types"
 import AccountCard, { AccountSection } from "../components/AccountCard"
 import { useNavigate } from "react-router-dom"
-import { getUser, updateUser } from "../features/user/userSlice"
+import { updateUser } from "../features/user/userSlice"
 import { AppDispatch } from "../store"
 
 export default function DashboardPage() {
-  const dispatch = useDispatch<AppDispatch>()
   const navigate = useNavigate()
   const user = useSelector(getUserInfo)
   const status = useSelector(getProfileFetchStatus)
-
-  useEffect(() => {
-    try {
-      dispatch(getUser())
-    } catch (error: any) {
-      alert(error.message)
-      console.error(error)
-    }
-  }, [])
 
   if (status === "loading") {
     return (

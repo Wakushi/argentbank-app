@@ -1,19 +1,6 @@
-import { useEffect } from "react"
 import Hero from "../components/Hero"
-import { getUser } from "../features/user/userSlice"
-import { useDispatch } from "react-redux"
-import { AppDispatch } from "../store"
 
 export default function HomePage() {
-  const dispatch = useDispatch<AppDispatch>()
-
-  useEffect(() => {
-    const token = localStorage.getItem("access_token")
-    if (token) {
-      dispatch(getUser())
-    }
-  }, [])
-
   return (
     <main>
       <Hero />

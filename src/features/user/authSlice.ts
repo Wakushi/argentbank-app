@@ -46,13 +46,7 @@ export const login: AsyncThunk<
 
     localStorage.setItem("access_token", token)
 
-    try {
-      await dispatch(getUser()).unwrap()
-    } catch (error) {
-      console.error("Failed to fetch user data:", error)
-      localStorage.removeItem("access_token")
-      throw error
-    }
+    await dispatch(getUser()).unwrap()
 
     return data
   } catch (error) {

@@ -61,11 +61,24 @@ function DashboardHead({ user }: { user: User }) {
   const { firstName, lastName } = user
 
   const [editMode, setEditMode] = useState<boolean>(false)
+  const [userInput, setUserInput] = useState<
+    Pick<User, "firstName" | "lastName">
+  >({
+    firstName,
+    lastName,
+  })
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault()
+
     const formData = new FormData(e.target as HTMLFormElement)
     const { firstName, lastName } = Object.fromEntries(formData.entries())
+
+    if (!firstName || !lastName) {
+      alert("Please enter a firstname and lastname")
+      return
+    }
+
     try {
       await dispatch(
         updateUser({
@@ -81,6 +94,13 @@ function DashboardHead({ user }: { user: User }) {
     }
   }
 
+  function handleOnChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    setUserInput((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }))
+  }
+
   return (
     <div className="header">
       <h1>Welcome back</h1>
@@ -88,8 +108,20 @@ function DashboardHead({ user }: { user: User }) {
         <div>
           <form className="update-form" onSubmit={onSubmit}>
             <div className="update-form-inputs">
-              <input type="text" placeholder={firstName} name="firstName" />
-              <input type="text" placeholder={lastName} name="lastName" />
+              <input
+                type="text"
+                value={userInput.firstName}
+                onChange={handleOnChange}
+                placeholder={firstName}
+                name="firstName"
+              />
+              <input
+                type="text"
+                value={userInput.lastName}
+                onChange={handleOnChange}
+                placeholder={lastName}
+                name="lastName"
+              />
             </div>
             <div className="update-form-actions">
               <button type="submit">Save</button>

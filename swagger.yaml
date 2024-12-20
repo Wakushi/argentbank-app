@@ -132,7 +132,7 @@ paths:
           description: Invalid Fields
         "500":
           description: Internal Server Error
-    
+
   /transactions/{transactionId}:
     get:
       tags:
@@ -281,6 +281,15 @@ definitions:
       description:
         type: string
         description: Description of the transaction
+      type:
+        type: string
+        description: Type of the transaction
+      category:
+        type: string
+        description: Category of the transaction
+      notes:
+        type: string
+        description: Notes associated with the transaction
   TransactionPayload:
     type: object
     properties:
@@ -297,6 +306,15 @@ definitions:
       description:
         type: string
         description: Description of the transaction
+      type:
+        type: string
+        description: Type of the transaction
+      category:
+        type: string
+        description: Category of the transaction
+      notes:
+        type: string
+        description: Notes associated with the transaction
   TransactionsResponse:
     type: object
     properties:

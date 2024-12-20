@@ -61,6 +61,8 @@ body {
 }
 
 .main-nav-item {
+  display: flex;
+  align-items: center;
   text-decoration: none;
   margin-right: 0.5rem;
   border: transparent;
@@ -337,4 +339,16 @@ body {
   color: #00bc77;
   font-weight: 600;
   border-radius: 0.2rem;
+}
+
+.fa-sign-in,
+.fa-user-circle,
+.fa-sign-out {
+  font-size: 1.3rem;
+}
+
+.logged-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

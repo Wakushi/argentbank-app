@@ -95,9 +95,11 @@ function DashboardHead({ user }: { user: User }) {
   }
 
   function handleOnChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    const { value, name } = e.target
+
     setUserInput((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }))
   }
 

@@ -121,6 +121,14 @@ paths:
           name: month
           type: string
           description: Month for which to retrieve transactions
+        - in: query
+          name: accountId
+          type: string
+          description: Account for which to retrieve transactions
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
       produces:
         - application/json
       responses:
@@ -145,6 +153,10 @@ paths:
           type: string
           description: ID of the transaction to retrieve
           required: true
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
       produces:
         - application/json
       responses:
@@ -163,6 +175,10 @@ paths:
       summary: Update a transaction
       description: API to update information of a specific transaction
       parameters:
+        - in: header
+          name: Authorization
+          description: Attach Bearer JWT token
+          required: true
         - in: path
           name: transactionId
           type: string
@@ -188,26 +204,6 @@ paths:
         "500":
           description: Internal Server Error
 
-    delete:
-      tags:
-        - Transaction Module
-      summary: Delete a transaction
-      description: API to delete a specific transaction
-      parameters:
-        - in: path
-          name: transactionId
-          type: string
-          description: ID of the transaction to delete
-          required: true
-      produces:
-        - application/json
-      responses:
-        "200":
-          description: Transaction deleted successfully
-        "404":
-          description: Transaction not found
-        "500":
-          description: Internal Server Error
 securityDefinitions:
   Bearer:
     type: apiKey
